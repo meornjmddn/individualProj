@@ -54,13 +54,6 @@ def threaded_client(connection,addr):
                     output = str(e)
                 else:
                     output = str(dirs)
-                #try:
-                #    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
-                #except Execption as e:
-                #    output = str(e)
-                #else:
-                #    if output == "":
-                #            output = "Done"
             outputs = encrypt(output)
             connection.send(outputs)
             cmds = connection.recv(2048)

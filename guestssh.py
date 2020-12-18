@@ -12,7 +12,7 @@ def decrypt(decrypt_data):
     data = obj.decrypt(decrypt_data)
     return data
 
-host = "192.168.68.111"
+host = "server ip"
 sport = 8080
 csock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 csock.connect((host, sport))

@@ -12,7 +12,7 @@ def decrypt(decrypt_data):
     obj = AES.new(b"1122334456789001", AES.MODE_CFB, b"2299225510784791")
     data = obj.decrypt(decrypt_data)
     return data
-host = "192.168.68.111"
+host = "server ip"
 port = 8080
 ThreadCount = 0
 ssocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

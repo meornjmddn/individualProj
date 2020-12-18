@@ -20,7 +20,7 @@ ssocket.bind((host, port))
 print('Waiting for a Connection..')
 ssocket.listen(5)
 
-def threaded_client(connection):
+def threaded_client(connection,addr):
     while True:
         cmds = connection.recv(2048)
         temp = decrypt(cmds)
@@ -72,7 +72,7 @@ def threaded_client(connection):
                 break
 while True:
     consocket, addr = ssocket.accept()
-    start_new_thread(threaded_client, (consocket, ))
+    start_new_thread(threaded_client, (consocket,addr))
     ThreadCount += 1
     print('Thread Number: ' + str(ThreadCount))
 ssocket.close()
